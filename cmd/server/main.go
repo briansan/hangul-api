@@ -9,6 +9,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+func handlePing(c echo.Context) error {
+	return c.JSON(http.StatusOK, nil)
+}
+
 func handlePronounce(c echo.Context) error {
 	ch := c.QueryParam("ch")
 	logrus.WithField("ch", ch).Info("+pronounce")
@@ -38,6 +42,7 @@ func handlePronounce(c echo.Context) error {
 func main() {
 	e := echo.New()
 	e.GET("/pronounce", handlePronounce)
+	e.GET("/", handlePing)
 
 	logrus.Info("Starting server")
 	e.Start(":5250")
