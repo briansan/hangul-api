@@ -6,4 +6,6 @@ COPY go.mod .
 COPY go.sum .
 COPY cmd ./cmd
 
-RUN go build -o hangul-api ./cmd/server
+RUN go build -o /bin/hangul-api ./cmd/server
+
+ENTRYPOINT ["/bin/hangul-api"]
