@@ -12,6 +12,7 @@ env:
 
 jobs:
   build-backend:
+    environment: master
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code

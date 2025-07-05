@@ -1,11 +1,17 @@
-FROM golang:1.14
+FROM golang:1.21-alpine AS builder
 
-RUN mkdir /go/src/hangul-api
-WORKDIR /go/src/hangul-api
-COPY go.mod .
-COPY go.sum .
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+
 COPY cmd ./cmd
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o hangul-api ./cmd/server
 
-RUN go build -o /bin/hangul-api ./cmd/server
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates curl
+WORKDIR /root/
 
-ENTRYPOINT ["/bin/hangul-api"]
+COPY --from=builder /app/hangul-api .
+
+EXPOSE 5250
+CMD ["./hangul-api"]
